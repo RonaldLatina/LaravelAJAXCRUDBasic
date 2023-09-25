@@ -1,112 +1,93 @@
-{{-- *jQuery Library: Make sure that you have included the jQuery library in your HTML file before your JavaScript code. You
-can include it from a CDN (Content Delivery Network) or by downloading and hosting it locally. --}}
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Laravel 10 Ajax DataTables CRUD (Create Read Update and Delete)</title>
+    <title>Laravel 10 Ajax DataTables CRUD (Create Read Update and Delete) - Cairocoders</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+    <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 </head>
 
 <body>
-
     <div class="container mt-2">
         <div class="row">
             <div class="col-lg-12 margin-tb">
                 <div class="pull-left">
-                    <h2>Laravel 10 Ajax DataTables CRUD (Create Read Update and Delete)</h2>
+                    <h2>Laravel 10 Ajax DataTables CRUD (Create Read Update and Delete) </h2>
                 </div>
                 <div class="pull-right mb-2">
                     <a class="btn btn-success" onClick="add()" href="javascript:void(0)"> Create Employee</a>
                 </div>
             </div>
         </div>
-
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success">
+                <p>{{ $message }}</p>
+            </div>
+        @endif
         <div class="card-body">
-            <table class="table table-bordered">
+            <table class="table table-bordered" id="ajax-crud-datatable">
                 <thead>
                     <tr>
                         <th>Id</th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Address</th>
-                        <th>Created At</th>
+                        <th>Created at</th>
                         <th>Action</th>
                     </tr>
                 </thead>
             </table>
         </div>
-
     </div>
 
-    <!-- Modal Employee -->
-    <div class="modal fade" id="employee-modal" tabindex="-1" aria-labelledby="employee-modal-label"
-        aria-hidden="true">
+    <!-- boostrap employee model -->
+    <div class="modal fade" id="employee-modal" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="employee-modal-label">Employee</h1>
+                    <h5 class="modal-title">Employee</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form action="javascript:void(0)" id="EmployeeForm" name="EmployeeForm" class="form-horizontal"
                         method="POST" enctype="multipart/form-data">
-                        <input type="text" name="id" id="id">
+                        <input type="hidden" name="id" id="id">
                         <div class="form-group">
                             <label for="name" class="col-sm-2 control-label">Name</label>
                             <div class="col-sm-12">
                                 <input type="text" class="form-control" id="name" name="name"
-                                    placeholder="Enter Name" maxlength="50" required>
+                                    placeholder="Enter Name" maxlength="50" required="">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="name" class="col-sm-2 control-label">Email</label>
                             <div class="col-sm-12">
-                                <input type="text" class="form-control" id="email" name="email"
-                                    placeholder="Enter Email" maxlength="50" required>
+                                <input type="email" class="form-control" id="email" name="email"
+                                    placeholder="Enter Email" maxlength="50" required="">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="name" class="col-sm-2 control-label">Address</label>
+                            <label class="col-sm-2 control-label">Address</label>
                             <div class="col-sm-12">
                                 <input type="text" class="form-control" id="address" name="address"
-                                    placeholder="Enter Address" maxlength="50" required>
+                                    placeholder="Enter Address" required="">
                             </div>
                         </div>
                         <div class="col-sm-offset-2 col-sm-10"><br />
-                            <button type="submit" class="btn btn-primary" id="btn-save">Save Changes</button>
+                            <button type="submit" class="btn btn-primary" id="btn-save">Save changes</button>
                         </div>
-
                     </form>
                 </div>
-                <div class="modal-footer">
-                </div>
+                <div class="modal-footer"></div>
             </div>
         </div>
     </div>
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
-        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous">
-    </script>
-
+    <!-- end bootstrap model -->
     <script type="text/javascript">
         $(document).ready(function() {
             $.ajaxSetup({
@@ -114,10 +95,86 @@ can include it from a CDN (Content Delivery Network) or by downloading and hosti
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
+            $('#ajax-crud-datatable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "{{ url('ajax-crud-datatable') }}",
+                columns: [{
+                        data: 'id',
+                        name: 'id'
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'email',
+                        name: 'email'
+                    },
+                    {
+                        data: 'address',
+                        name: 'address'
+                    },
+                    {
+                        data: 'created_at',
+                        name: 'created_at'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false
+                    },
+                ],
+                order: [
+                    [0, 'desc']
+                ]
+            });
         });
 
         function add() {
+            $('#EmployeeForm').trigger("reset");
+            $('#EmployeeModal').html("Add Employee");
             $('#employee-modal').modal('show');
+            $('#id').val('');
+        }
+
+        function editFunc(id) {
+            $.ajax({
+                type: "POST",
+                url: "{{ url('edit') }}",
+                data: {
+                    id: id
+                },
+                dataType: 'json',
+                success: function(res) {
+                    $('#EmployeeModal').html("Edit Employee");
+                    $('#employee-modal').modal('show');
+                    $('#id').val(res.id);
+                    $('#name').val(res.name);
+                    $('#address').val(res.address);
+                    $('#email').val(res.email);
+                }
+            });
+        }
+
+        function deleteFunc(id) {
+            if (confirm("Delete Record?") == true) {
+                var id = id;
+                // ajax
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url('delete') }}",
+                    data: {
+                        id: id
+                    },
+                    dataType: 'json',
+                    success: function(res) {
+                        var oTable = $('#ajax-crud-datatable').dataTable();
+                        oTable.fnDraw(false);
+                    }
+                });
+            }
         }
 
         $('#EmployeeForm').submit(function(e) {
@@ -131,7 +188,11 @@ can include it from a CDN (Content Delivery Network) or by downloading and hosti
                 contentType: false,
                 processData: false,
                 success: (data) => {
-                    console.log(data);
+                    $("#employee-modal").modal('hide');
+                    var oTable = $('#ajax-crud-datatable').dataTable();
+                    oTable.fnDraw(false);
+                    $("#btn-save").html('Submit');
+                    $("#btn-save").attr("disabled", false);
                 },
                 error: function(data) {
                     console.log(data);
@@ -139,7 +200,6 @@ can include it from a CDN (Content Delivery Network) or by downloading and hosti
             });
         });
     </script>
-
 </body>
 
 </html>
